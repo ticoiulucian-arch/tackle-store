@@ -39,7 +39,6 @@ out/
 ### Zscaler / Corporate ###
 zscaler-root.crt
 cacerts
-Dockerfile
 docker-compose.yml
 .dockerignore
 
