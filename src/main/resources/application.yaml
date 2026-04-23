@@ -3,10 +3,10 @@ spring:
     name: tackle-store
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/tacklestore
+    url: ${DATABASE_URL}
     driver-class-name: org.postgresql.Driver
-    username: tackle
-    password: tackle
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
 
   jpa:
     hibernate:
@@ -30,38 +30,12 @@ app:
     allowed-origins: http://localhost:3000
 
 cloudinary:
-  cloud-name: ${CLOUDINARY_CLOUD_NAME:dqkiviymz}
-  api-key: ${CLOUDINARY_API_KEY:881759542116688}
-  api-secret: ${CLOUDINARY_API_SECRET:riHeMMUHqA_e3USPi4ykgXQ9_H4}
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
 
 springdoc:
   api-docs:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
-
----
-spring:
-  config:
-    activate:
-      on-profile: prod
-
-  datasource:
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: false
-
----
-spring:
-  config:
-    activate:
-      on-profile: neon
-
-  datasource:
-    url: jdbc:postgresql://ep-summer-star-abyua43j-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require
-    username: neondb_owner
-    password: npg_A21ILsTZkOnm
