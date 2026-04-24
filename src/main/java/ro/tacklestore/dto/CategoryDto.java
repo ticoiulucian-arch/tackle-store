@@ -18,6 +18,8 @@ public class CategoryDto {
     private String name;
     private String description;
     private String imageUrl;
+    private Long parentId;
     private Integer productCount;
     private List<String> specTemplate;
+    private List<CategoryDto> children;
 }

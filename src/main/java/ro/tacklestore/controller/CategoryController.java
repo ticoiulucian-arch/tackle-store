@@ -20,6 +20,11 @@ public class CategoryController {
         return categoryService.findAll();
     }
 
+    @GetMapping("/flat")
+    public List<CategoryDto> findAllFlat() {
+        return categoryService.findAllFlat();
+    }
+
     @GetMapping("/{id}")
     public CategoryDto findById(@PathVariable Long id) {
         return categoryService.findById(id);
@@ -42,4 +47,3 @@ public class CategoryController {
         categoryService.delete(id);
     }
 }
-

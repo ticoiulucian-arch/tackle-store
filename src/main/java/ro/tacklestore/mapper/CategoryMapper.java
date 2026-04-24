@@ -13,6 +13,7 @@ import java.util.List;
 public interface CategoryMapper {
 
     @Mapping(target = "productCount", source = "products", qualifiedByName = "productListSize")
+    @Mapping(target = "parentId", source = "parent.id")
     CategoryDto toDto(Category category);
 
     @Named("productListSize")
@@ -20,4 +21,3 @@ public interface CategoryMapper {
         return products != null ? products.size() : 0;
     }
 }
-

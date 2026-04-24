@@ -20,6 +20,12 @@ public class CategoryService {
     private final CategoryMapper mapper;
 
     public List<CategoryDto> findAll() {
+        return categoryRepository.findByParentIsNull().stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    public List<CategoryDto> findAllFlat() {
         return categoryRepository.findAll().stream()
                 .map(mapper::toDto)
                 .toList();
@@ -33,13 +39,17 @@ public class CategoryService {
 
     @Transactional
     public CategoryDto create(CategoryDto dto) {
-        var category = Category.builder()
+        var builder = Category.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .imageUrl(dto.getImageUrl())
-                .specTemplate(dto.getSpecTemplate() != null ? dto.getSpecTemplate() : List.of())
-                .build();
-        return mapper.toDto(categoryRepository.save(category));
+                .specTemplate(dto.getSpecTemplate() != null ? dto.getSpecTemplate() : List.of());
+        if (dto.getParentId() != null) {
+            var parent = categoryRepository.findById(dto.getParentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Parent category not found: " + dto.getParentId()));
+            builder.parent(parent);
+        }
+        return mapper.toDto(categoryRepository.save(builder.build()));
     }
 
     @Transactional
@@ -50,6 +60,13 @@ public class CategoryService {
         category.setDescription(dto.getDescription());
         category.setImageUrl(dto.getImageUrl());
         category.setSpecTemplate(dto.getSpecTemplate() != null ? dto.getSpecTemplate() : List.of());
+        if (dto.getParentId() != null) {
+            var parent = categoryRepository.findById(dto.getParentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Parent category not found: " + dto.getParentId()));
+            category.setParent(parent);
+        } else {
+            category.setParent(null);
+        }
         return mapper.toDto(categoryRepository.save(category));
     }
 
