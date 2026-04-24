@@ -1,5 +1,7 @@
 package ro.tacklestore.service;
 
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +13,7 @@ import ro.tacklestore.dto.TranslationRequest;
 import ro.tacklestore.exception.ResourceNotFoundException;
 import ro.tacklestore.mapper.ProductMapper;
 import ro.tacklestore.model.Product;
+import ro.tacklestore.model.ProductImage;
 import ro.tacklestore.model.ProductSpecification;
 import ro.tacklestore.model.ProductTranslation;
 import ro.tacklestore.model.enums.ProductType;
@@ -19,10 +22,11 @@ import ro.tacklestore.repository.ProductRepository;
 import ro.tacklestore.repository.ProductSpecificationRepository;
 import ro.tacklestore.repository.ProductTranslationRepository;
 
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Predicate;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -36,11 +40,17 @@ public class ProductService {
     private final ProductMapper mapper;
 
     private ProductDto applyLocale(ProductDto dto, String locale) {
-        if (locale == null || dto.getTranslations() == null) return dto;
+        if (locale == null || dto.getTranslations() == null) {
+            return dto;
+        }
         var tr = dto.getTranslations().get(locale);
         if (tr != null) {
-            if (tr.getName() != null && !tr.getName().isBlank()) dto.setName(tr.getName());
-            if (tr.getDescription() != null && !tr.getDescription().isBlank()) dto.setDescription(tr.getDescription());
+            if (tr.getName() != null && !tr.getName().isBlank()) {
+                dto.setName(tr.getName());
+            }
+            if (tr.getDescription() != null && !tr.getDescription().isBlank()) {
+                dto.setDescription(tr.getDescription());
+            }
         }
         return dto;
     }
@@ -81,7 +91,9 @@ public class ProductService {
             product.setCategory(category);
         }
 
-        return mapper.toDto(productRepository.save(product));
+        product = productRepository.save(product);
+        syncImages(product, req.getImageUrls());
+        return mapper.toDto(product);
     }
 
     @Transactional
@@ -103,7 +115,9 @@ public class ProductService {
             product.setCategory(category);
         }
 
-        return mapper.toDto(productRepository.save(product));
+        product = productRepository.save(product);
+        syncImages(product, req.getImageUrls());
+        return mapper.toDto(product);
     }
 
     @Transactional
@@ -120,15 +134,21 @@ public class ProductService {
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(cb.isTrue(root.get("active")));
 
-            if (type != null) predicates.add(cb.equal(root.get("type"), type));
-            if (categoryId != null) predicates.add(cb.equal(root.get("category").get("id"), categoryId));
-            if (brand != null) predicates.add(cb.equal(root.get("brand"), brand));
+            if (type != null) {
+                predicates.add(cb.equal(root.get("type"), type));
+            }
+            if (categoryId != null) {
+                predicates.add(cb.equal(root.get("category").get("id"), categoryId));
+            }
+            if (brand != null) {
+                predicates.add(cb.equal(root.get("brand"), brand));
+            }
 
             for (var entry : specs.entrySet()) {
                 Join<Product, ProductSpecification> specJoin = root.join("specifications");
                 predicates.add(cb.and(
-                    cb.equal(specJoin.get("specKey"), entry.getKey()),
-                    cb.equal(specJoin.get("specValue"), entry.getValue())
+                        cb.equal(specJoin.get("specKey"), entry.getKey()),
+                        cb.equal(specJoin.get("specValue"), entry.getValue())
                 ));
             }
 
@@ -180,5 +200,20 @@ public class ProductService {
             result.put(key, specRepository.findDistinctValuesByKeyAndType(key, type));
         }
         return result;
+    }
+
+    private void syncImages(Product product, List<String> imageUrls) {
+        if (imageUrls == null) {
+            return;
+        }
+        product.getImages().clear();
+        for (int i = 0; i < imageUrls.size(); i++) {
+            product.getImages().add(ProductImage.builder()
+                    .url(imageUrls.get(i))
+                    .sortOrder(i)
+                    .product(product)
+                    .build());
+        }
+        productRepository.save(product);
     }
 }

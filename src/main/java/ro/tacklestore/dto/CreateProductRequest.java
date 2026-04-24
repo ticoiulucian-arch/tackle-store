@@ -1,12 +1,24 @@
 package ro.tacklestore.dto;
 
-import jakarta.validation.constraints.*;
-import lombok.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ro.tacklestore.model.enums.ProductType;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CreateProductRequest {
 
     @NotBlank
@@ -14,13 +26,16 @@ public class CreateProductRequest {
 
     private String description;
 
-    @NotNull @DecimalMin("0.01")
+    @NotNull
+    @DecimalMin("0.01")
     private BigDecimal price;
 
-    @NotNull @Min(0)
+    @NotNull
+    @Min(0)
     private Integer stockQuantity;
 
     private String imageUrl;
+    private List<String> imageUrls;
     private String brand;
 
     @NotNull

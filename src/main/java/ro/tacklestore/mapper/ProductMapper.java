@@ -7,6 +7,7 @@ import ro.tacklestore.dto.CreateProductRequest;
 import ro.tacklestore.dto.ProductDto;
 import ro.tacklestore.dto.TranslationRequest;
 import ro.tacklestore.model.Product;
+import ro.tacklestore.model.ProductImage;
 import ro.tacklestore.model.ProductSpecification;
 import ro.tacklestore.model.ProductTranslation;
 
@@ -23,6 +24,7 @@ public interface ProductMapper {
     @Mapping(target = "categoryName", source = "category.name")
     @Mapping(target = "specifications", source = "specifications", qualifiedByName = "specsToMap")
     @Mapping(target = "translations", source = "translations", qualifiedByName = "translationsToMap")
+    @Mapping(target = "imageUrls", source = "images", qualifiedByName = "imagesToUrls")
     ProductDto toDto(Product product);
 
     @Mapping(target = "id", ignore = true)
@@ -49,5 +51,11 @@ public interface ProductMapper {
             (a, b) -> b,
             LinkedHashMap::new
         ));
+    }
+
+    @Named("imagesToUrls")
+    default List<String> imagesToUrls(List<ProductImage> images) {
+        if (images == null) return Collections.emptyList();
+        return images.stream().map(ProductImage::getUrl).collect(Collectors.toList());
     }
 }
