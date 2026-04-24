@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tacklestore
+    username: tackle
+    password: tackle
+
+cloudinary:
+  cloud-name: dqkiviymz
+  api-key: 881759542116688
+  api-secret: riHeMMUHqA_e3USPi4ykgXQ9_H4

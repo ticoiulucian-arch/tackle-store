@@ -35,22 +35,36 @@ public class AdminInitializer implements ApplicationRunner {
 
         if (categoryRepository.count() == 0) {
             categoryRepository.saveAll(List.of(
-                cat("Feeder Rods", "Rods specially designed for method feeder fishing, with interchangeable sensitive tips.",
-                    List.of("Length (m)", "Casting Weight (g)", "Sections", "Weight (g)", "Material", "Tips Included")),
-                cat("Feeder Reels", "Reels with fast retrieve and precise drag, ideal for method feeder fishing.",
+                cat("Rods", "Fishing rods for all techniques — feeder, match, bolognese, spinning, carp and more.",
+                    List.of("Length (m)", "Casting Weight (g)", "Sections", "Weight (g)", "Material", "Action")),
+                cat("Reels", "Spinning, baitcasting and big pit reels for all fishing styles.",
                     List.of("Gear Ratio", "Spool Capacity (mm/m)", "Bearings", "Weight (g)", "Size", "Drag Type")),
-                cat("Method Feeders", "Method feeders of various shapes and weights, along with moulds for compacting groundbait.",
-                    List.of("Weight (g)", "Type (flat/banjo/cage)", "Material", "Size", "Mould Included")),
-                cat("Baits & Groundbait", "Specialist method feeder groundbaits, pellets, boilies, pop-ups and wafters.",
-                    List.of("Type (groundbait/pellet/boilies/wafters)", "Weight (kg)", "Flavour", "Size (mm)", "Solubility")),
-                cat("Rigs & Hooks", "Ready-tied method feeder rigs and high-strength hooks.",
-                    List.of("Hook Size", "Hooklink Length (cm)", "Hooklink Diameter (mm)", "Hook Material", "Type (tied/untied)", "Pieces per Pack")),
-                cat("Lines & Leaders", "Monofilament, fluorocarbon and braided lines for method feeder fishing.",
+                cat("Lines & Leaders", "Monofilament, fluorocarbon and braided lines for any situation.",
                     List.of("Type (mono/fluoro/braid)", "Diameter (mm)", "Breaking Strain (kg)", "Length (m)", "Colour", "Stretch")),
-                cat("Accessories", "Clips, swivels, pellet bands, bait bands, baiting needles and other tools.",
+                cat("Hooks", "Single, treble and specialty hooks in all sizes.",
+                    List.of("Hook Size", "Type", "Material", "Barbed/Barbless", "Pieces per Pack")),
+                cat("Feeders & Weights", "Method feeders, cage feeders, leads and sinkers.",
+                    List.of("Weight (g)", "Type (flat/banjo/cage/lead)", "Material", "Size", "Mould Included")),
+                cat("Baits & Groundbait", "Boilies, pellets, groundbait mixes, pop-ups, wafters and live bait.",
+                    List.of("Type (groundbait/pellet/boilies/wafters)", "Weight (kg)", "Flavour", "Size (mm)", "Solubility")),
+                cat("Rigs & Terminal Tackle", "Ready-tied rigs, swivels, clips, beads and end tackle components.",
+                    List.of("Hook Size", "Hooklink Length (cm)", "Hooklink Diameter (mm)", "Material", "Type", "Pieces per Pack")),
+                cat("Rod Pods & Bite Alarms", "Rod pods, bank sticks, buzz bars, electronic bite alarms and indicators.",
+                    List.of("Type (rod pod/bank stick/bite alarm)", "Material", "Weight (g)", "Adjustable Length", "Compatibility")),
+                cat("Landing Nets & Keepnets", "Landing nets, keepnets, handles and net accessories.",
+                    List.of("Net Size (cm)", "Handle Length (m)", "Mesh Size", "Material", "Foldable")),
+                cat("Luggage & Storage", "Carryalls, rod holdalls, tackle boxes, rucksacks and cool bags.",
+                    List.of("Type", "Dimensions (cm)", "Material", "Compartments", "Waterproof")),
+                cat("Chairs & Bedchairs", "Fishing chairs, seatboxes, bedchairs and shelters.",
+                    List.of("Type (chair/seatbox/bedchair)", "Weight Capacity (kg)", "Weight (g)", "Foldable", "Material")),
+                cat("Clothing & Footwear", "Fishing jackets, trousers, boots, waders and thermal wear.",
+                    List.of("Type", "Size", "Material", "Waterproof", "Breathable")),
+                cat("Electronics", "Fish finders, headlamps, power banks and other electronic gear.",
+                    List.of("Type", "Battery", "Weight (g)", "Waterproof Rating", "Features")),
+                cat("Accessories", "Tools, disgorgers, scales, slings, mats and general fishing accessories.",
                     List.of("Accessory Type", "Size", "Material", "Pieces per Pack", "Compatibility"))
             ));
-            log.info("Seeded 7 method feeder categories with spec templates");
+            log.info("Seeded 14 categories with spec templates");
         }
     }
 
